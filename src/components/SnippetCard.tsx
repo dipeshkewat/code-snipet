@@ -92,7 +92,7 @@ export default function SnippetCard({ snippet, onDelete }: Props) {
           </span>
         </div>
 
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+        <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity ml-2">
           <button
             onClick={handleCopy}
             className={cn(

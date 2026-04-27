@@ -50,11 +50,11 @@ export default function App() {
         <header className="border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-30">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-violet-600/20 border border-violet-500/30 flex items-center justify-center">
-                <Braces size={16} className="text-violet-400" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center overflow-hidden">
+                <img src="/logo.png" alt="Code Heist Logo" className="w-full h-full object-cover" />
               </div>
               <div>
-                <h1 className="text-base font-semibold text-zinc-100 tracking-tight">SnipStash Showcase</h1>
+                <h1 className="text-base font-semibold text-zinc-100 tracking-tight">Code Heist Showcase</h1>
                 <p className="text-[10px] text-zinc-500 -mt-0.5">Explore my favorite snippets.</p>
               </div>
             </div>
@@ -173,7 +173,7 @@ export default function App() {
         <footer className="border-t border-zinc-800/30 mt-12">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 text-center">
             <p className="text-[10px] text-zinc-700">
-              SnipStash Showcase — Public snippets.
+              Code Heist Showcase — Public snippets.
             </p>
           </div>
         </footer>

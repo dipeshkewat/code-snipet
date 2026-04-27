@@ -13,11 +13,6 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Users can only delete snippets from their local view, but it resets on refresh
-  const handleDelete = (id: string) => {
-    setSnippets((prev) => prev.filter((s) => s.id !== id));
-  };
-
   const filteredSnippets = useMemo(() => {
     let result = snippets;
 
@@ -167,7 +162,6 @@ export default function App() {
                   <SnippetCard
                     key={snippet.id}
                     snippet={snippet}
-                    onDelete={handleDelete}
                   />
                 ))}
               </div>
@@ -179,7 +173,7 @@ export default function App() {
         <footer className="border-t border-zinc-800/30 mt-12">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 text-center">
             <p className="text-[10px] text-zinc-700">
-              SnipStash Showcase — Public snippets. Refresh to restore deleted items.
+              SnipStash Showcase — Public snippets.
             </p>
           </div>
         </footer>

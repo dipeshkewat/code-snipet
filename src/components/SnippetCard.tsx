@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Copy, Check, Trash2, Code, StickyNote, FlaskConical, MoreHorizontal, Clock } from 'lucide-react';
+import { Copy, Check, Code, StickyNote, FlaskConical, MoreHorizontal, Clock } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { Snippet, Category, CATEGORIES } from '../types';
 
@@ -12,7 +12,6 @@ const categoryIcons: Record<Category, React.ReactNode> = {
 
 interface Props {
   snippet: Snippet;
-  onDelete: (id: string) => void;
 }
 
 function timeAgo(timestamp: number): string {
@@ -27,10 +26,9 @@ function timeAgo(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString();
 }
 
-export default function SnippetCard({ snippet, onDelete }: Props) {
+export default function SnippetCard({ snippet }: Props) {
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const catInfo = CATEGORIES.find((c) => c.value === snippet.category) || CATEGORIES[3];
 
@@ -51,14 +49,6 @@ export default function SnippetCard({ snippet, onDelete }: Props) {
     }
   }, [snippet.content]);
 
-  const handleDelete = useCallback(() => {
-    if (confirmDelete) {
-      onDelete(snippet.id);
-    } else {
-      setConfirmDelete(true);
-      setTimeout(() => setConfirmDelete(false), 3000);
-    }
-  }, [confirmDelete, onDelete, snippet.id]);
 
   const lines = snippet.content.split('\n');
   const previewLines = lines.slice(0, 4).join('\n');
@@ -104,18 +94,6 @@ export default function SnippetCard({ snippet, onDelete }: Props) {
             title="Copy to clipboard"
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
-          </button>
-          <button
-            onClick={handleDelete}
-            className={cn(
-              'p-1.5 rounded-lg transition-all duration-150',
-              confirmDelete
-                ? 'text-red-400 bg-red-500/10'
-                : 'text-zinc-500 hover:text-red-400 hover:bg-red-500/10'
-            )}
-            title={confirmDelete ? 'Click again to confirm' : 'Delete snippet'}
-          >
-            <Trash2 size={14} />
           </button>
         </div>
       </div>

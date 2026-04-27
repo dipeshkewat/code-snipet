@@ -1,44 +1,22 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { Braces, Filter, X } from 'lucide-react';
 import { cn } from './utils/cn';
 import { Snippet, Category, CATEGORIES } from './types';
-import { useLocalStorage } from './hooks/useLocalStorage';
-import SnippetEditor from './components/SnippetEditor';
+import { INITIAL_SNIPPETS } from './data';
 import SnippetCard from './components/SnippetCard';
 import SearchBar from './components/SearchBar';
 import EmptyState from './components/EmptyState';
 
-function generateId(): string {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-}
-
 export default function App() {
-  const [snippets, setSnippets] = useLocalStorage<Snippet[]>('snipstash-data', []);
+  const [snippets, setSnippets] = useState<Snippet[]>(INITIAL_SNIPPETS);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [showFilters, setShowFilters] = useState(false);
 
-  const handleSave = useCallback(
-    (data: { title: string; content: string; category: Category }) => {
-      const newSnippet: Snippet = {
-        id: generateId(),
-        title: data.title,
-        content: data.content,
-        category: data.category,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      };
-      setSnippets((prev: Snippet[]) => [newSnippet, ...prev]);
-    },
-    [setSnippets]
-  );
-
-  const handleDelete = useCallback(
-    (id: string) => {
-      setSnippets((prev: Snippet[]) => prev.filter((s: Snippet) => s.id !== id));
-    },
-    [setSnippets]
-  );
+  // Users can only delete snippets from their local view, but it resets on refresh
+  const handleDelete = (id: string) => {
+    setSnippets((prev) => prev.filter((s) => s.id !== id));
+  };
 
   const filteredSnippets = useMemo(() => {
     let result = snippets;
@@ -81,8 +59,8 @@ export default function App() {
                 <Braces size={16} className="text-violet-400" />
               </div>
               <div>
-                <h1 className="text-base font-semibold text-zinc-100 tracking-tight">SnipStash</h1>
-                <p className="text-[10px] text-zinc-500 -mt-0.5">Save snippets. Stay organized.</p>
+                <h1 className="text-base font-semibold text-zinc-100 tracking-tight">SnipStash Showcase</h1>
+                <p className="text-[10px] text-zinc-500 -mt-0.5">Explore my favorite snippets.</p>
               </div>
             </div>
             <div className="text-[10px] text-zinc-600 bg-zinc-900/60 px-2.5 py-1 rounded-full border border-zinc-800/40">
@@ -93,23 +71,12 @@ export default function App() {
 
         {/* Main Content */}
         <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-          {/* Editor Section */}
-          <section>
-            <div className="mb-4">
-              <h2 className="text-sm font-medium text-zinc-400 mb-1">New Snippet</h2>
-              <p className="text-xs text-zinc-600">
-                Paste or type content, choose a category, and save.
-              </p>
-            </div>
-            <SnippetEditor onSave={handleSave} />
-          </section>
-
           {/* Saved Snippets Section */}
           <section>
             {/* Section header with search */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
               <div>
-                <h2 className="text-sm font-medium text-zinc-400">Saved Snippets</h2>
+                <h2 className="text-sm font-medium text-zinc-400">Available Snippets</h2>
               </div>
               <div className="flex items-center gap-2">
                 <SearchBar
@@ -212,7 +179,7 @@ export default function App() {
         <footer className="border-t border-zinc-800/30 mt-12">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 text-center">
             <p className="text-[10px] text-zinc-700">
-              SnipStash — All data stored locally in your browser. Nothing leaves your device.
+              SnipStash Showcase — Public snippets. Refresh to restore deleted items.
             </p>
           </div>
         </footer>

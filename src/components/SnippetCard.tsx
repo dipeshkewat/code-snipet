@@ -1,12 +1,11 @@
 import { useState, useCallback } from 'react';
-import { Copy, Check, Code, StickyNote, FlaskConical, MoreHorizontal, Clock } from 'lucide-react';
+import { Download, Check, FileText, StickyNote, MoreHorizontal, Clock } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { Snippet, Category, CATEGORIES } from '../types';
 
 const categoryIcons: Record<Category, React.ReactNode> = {
-  code: <Code size={12} />,
+  document: <FileText size={12} />,
   notes: <StickyNote size={12} />,
-  experiments: <FlaskConical size={12} />,
   other: <MoreHorizontal size={12} />,
 };
 
@@ -27,32 +26,24 @@ function timeAgo(timestamp: number): string {
 }
 
 export default function SnippetCard({ snippet }: Props) {
-  const [copied, setCopied] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
 
-  const catInfo = CATEGORIES.find((c) => c.value === snippet.category) || CATEGORIES[3];
+  const catInfo = CATEGORIES.find((c) => c.value === snippet.category) || CATEGORIES[2]; // index 2 is 'other'
 
-  const handleCopy = useCallback(async () => {
+  const handleDownload = useCallback(() => {
     try {
-      await navigator.clipboard.writeText(snippet.content);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const textarea = document.createElement('textarea');
-      textarea.value = snippet.content;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      const link = document.createElement('a');
+      link.href = snippet.content;
+      link.download = snippet.title + (snippet.title.toLowerCase().endsWith('.pdf') ? '' : '.pdf');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setDownloaded(true);
+      setTimeout(() => setDownloaded(false), 2000);
+    } catch (err) {
+      console.error('Download failed', err);
     }
-  }, [snippet.content]);
-
-
-  const lines = snippet.content.split('\n');
-  const previewLines = lines.slice(0, 4).join('\n');
-  const isLong = lines.length > 4 || snippet.content.length > 300;
+  }, [snippet.content, snippet.title]);
 
   return (
     <div
@@ -84,51 +75,29 @@ export default function SnippetCard({ snippet }: Props) {
 
         <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity ml-2">
           <button
-            onClick={handleCopy}
+            onClick={handleDownload}
             className={cn(
               'p-1.5 rounded-lg transition-all duration-150',
-              copied
+              downloaded
                 ? 'text-emerald-400 bg-emerald-500/10'
                 : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
             )}
-            title="Copy to clipboard"
+            title="Download PDF"
           >
-            {copied ? <Check size={14} /> : <Copy size={14} />}
+            {downloaded ? <Check size={14} /> : <Download size={14} />}
           </button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="px-4 pb-2">
+      <div className="px-4 pb-4">
         <div
           className={cn(
-            'relative rounded-lg bg-zinc-950/60 border border-zinc-800/40 overflow-hidden',
-            'cursor-pointer'
+            'relative rounded-lg bg-zinc-950/60 border border-zinc-800/40 overflow-hidden py-8 flex flex-col items-center justify-center gap-2'
           )}
-          onClick={() => isLong && setIsExpanded(!isExpanded)}
         >
-          <pre
-            className={cn(
-              'text-xs text-zinc-400 font-mono leading-relaxed p-3 overflow-x-auto',
-              !isExpanded && isLong && 'max-h-[120px]'
-            )}
-          >
-            <code>{isExpanded ? snippet.content : previewLines}</code>
-          </pre>
-          {isLong && !isExpanded && (
-            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-zinc-950/90 to-transparent flex items-end justify-center pb-1.5">
-              <span className="text-[10px] text-zinc-500 hover:text-zinc-400 transition-colors">
-                Click to expand
-              </span>
-            </div>
-          )}
-          {isLong && isExpanded && (
-            <div className="flex justify-center py-1.5 border-t border-zinc-800/30">
-              <span className="text-[10px] text-zinc-500">
-                Click to collapse
-              </span>
-            </div>
-          )}
+          <FileText size={28} className="text-zinc-600" />
+          <p className="text-xs text-zinc-500 font-medium">PDF Document</p>
         </div>
       </div>
 
@@ -139,7 +108,7 @@ export default function SnippetCard({ snippet }: Props) {
           <span>{timeAgo(snippet.createdAt)}</span>
         </div>
         <span className="text-[10px] text-zinc-600">
-          {snippet.content.length} chars · {lines.length} lines
+          {snippet.content.length > 50 ? `${Math.round(snippet.content.length / 1024)} KB` : 'Document'}
         </span>
       </div>
     </div>

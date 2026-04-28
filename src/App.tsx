@@ -55,11 +55,11 @@ export default function App() {
               </div>
               <div>
                 <h1 className="text-base font-semibold text-zinc-100 tracking-tight">Code Heist Showcase</h1>
-                <p className="text-[10px] text-zinc-500 -mt-0.5">Explore my favorite snippets.</p>
+                <p className="text-[10px] text-zinc-500 -mt-0.5">Explore my PDF documents.</p>
               </div>
             </div>
             <div className="text-[10px] text-zinc-600 bg-zinc-900/60 px-2.5 py-1 rounded-full border border-zinc-800/40">
-              {snippets.length} snippet{snippets.length !== 1 ? 's' : ''}
+              {snippets.length} document{snippets.length !== 1 ? 's' : ''}
             </div>
           </div>
         </header>
@@ -71,7 +71,7 @@ export default function App() {
             {/* Section header with search */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
               <div>
-                <h2 className="text-sm font-medium text-zinc-400">Available Snippets</h2>
+                <h2 className="text-sm font-medium text-zinc-400">Available Documents</h2>
               </div>
               <div className="flex items-center gap-2">
                 <SearchBar
@@ -144,7 +144,7 @@ export default function App() {
                 <EmptyState />
               ) : (
                 <div className="flex flex-col items-center justify-center py-16">
-                  <p className="text-sm text-zinc-500">No snippets match your search.</p>
+                  <p className="text-sm text-zinc-500">No documents match your search.</p>
                   <button
                     onClick={() => {
                       setSearchQuery('');
@@ -173,7 +173,7 @@ export default function App() {
         <footer className="border-t border-zinc-800/30 mt-12">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 text-center">
             <p className="text-[10px] text-zinc-700">
-              Code Heist Showcase — Public snippets.
+              Code Heist Showcase - Public documents.
             </p>
           </div>
         </footer>

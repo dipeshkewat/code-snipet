@@ -4,6 +4,7 @@ import { cn } from './utils/cn';
 import { Snippet, Category, CATEGORIES } from './types';
 import { INITIAL_SNIPPETS } from './data';
 import SnippetCard from './components/SnippetCard';
+import SnippetEditor from './components/SnippetEditor';
 import SearchBar from './components/SearchBar';
 import EmptyState from './components/EmptyState';
 
@@ -12,6 +13,16 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [showFilters, setShowFilters] = useState(false);
+
+  const handleSaveSnippet = (snippet: { title: string; content: string; category: Category }) => {
+    const newSnippet: Snippet = {
+      id: `doc-${Date.now()}`,
+      ...snippet,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    setSnippets([newSnippet, ...snippets]);
+  };
 
   const filteredSnippets = useMemo(() => {
     let result = snippets;
@@ -66,7 +77,13 @@ export default function App() {
 
         {/* Main Content */}
         <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-          {/* Saved Snippets Section */}
+          {/* Add Document Section */}
+          <section>
+            <h2 className="text-sm font-medium text-zinc-400 mb-4">Add New PDF Document</h2>
+            <SnippetEditor onSave={handleSaveSnippet} />
+          </section>
+
+          {/* Saved Documents Section */}
           <section>
             {/* Section header with search */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">

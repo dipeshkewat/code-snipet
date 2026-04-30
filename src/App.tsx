@@ -4,7 +4,6 @@ import { cn } from './utils/cn';
 import { Snippet, Category, CATEGORIES } from './types';
 import { INITIAL_SNIPPETS } from './data';
 import SnippetCard from './components/SnippetCard';
-import SnippetEditor from './components/SnippetEditor';
 import SearchBar from './components/SearchBar';
 import EmptyState from './components/EmptyState';
 
@@ -13,16 +12,6 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [showFilters, setShowFilters] = useState(false);
-
-  const handleSaveSnippet = (snippet: { title: string; content: string; category: Category }) => {
-    const newSnippet: Snippet = {
-      id: `doc-${Date.now()}`,
-      ...snippet,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
-    setSnippets([newSnippet, ...snippets]);
-  };
 
   const filteredSnippets = useMemo(() => {
     let result = snippets;
@@ -87,12 +76,6 @@ export default function App() {
           <section>
             {/* Section header with search */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-              <div>
-                <h2 className="text-sm font-medium text-zinc-400">Available Documents</h2>
-              </div>
-              <div className="flex items-center gap-2">
-                <SearchBar
-                  value={searchQuery}
                   onChange={setSearchQuery}
                   resultCount={searchQuery ? filteredSnippets.length : undefined}
                 />

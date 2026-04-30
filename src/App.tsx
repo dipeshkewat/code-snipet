@@ -70,6 +70,12 @@ export default function App() {
           <section>
             {/* Section header with search */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+              <div>
+                <h2 className="text-sm font-medium text-zinc-400">Available Documents</h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <SearchBar
+                  value={searchQuery}
                   onChange={setSearchQuery}
                   resultCount={searchQuery ? filteredSnippets.length : undefined}
                 />

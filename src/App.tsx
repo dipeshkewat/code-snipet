@@ -66,12 +66,6 @@ export default function App() {
 
         {/* Main Content */}
         <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-          {/* Add Document Section */}
-          <section>
-            <h2 className="text-sm font-medium text-zinc-400 mb-4">Add New PDF Document</h2>
-            <SnippetEditor onSave={handleSaveSnippet} />
-          </section>
-
           {/* Saved Documents Section */}
           <section>
             {/* Section header with search */}

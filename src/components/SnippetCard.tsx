@@ -1,5 +1,4 @@
-import { useState, useCallback } from 'react';
-import { Download, Check, FileText, StickyNote, MoreHorizontal, Clock } from 'lucide-react';
+import { FileText, StickyNote, MoreHorizontal, Clock } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { Snippet, Category, CATEGORIES } from '../types';
 
@@ -26,24 +25,7 @@ function timeAgo(timestamp: number): string {
 }
 
 export default function SnippetCard({ snippet }: Props) {
-  const [downloaded, setDownloaded] = useState(false);
-
   const catInfo = CATEGORIES.find((c) => c.value === snippet.category) || CATEGORIES[2]; // index 2 is 'other'
-
-  const handleDownload = useCallback(() => {
-    try {
-      const link = document.createElement('a');
-      link.href = snippet.content;
-      link.download = snippet.title + (snippet.title.toLowerCase().endsWith('.pdf') ? '' : '.pdf');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setDownloaded(true);
-      setTimeout(() => setDownloaded(false), 2000);
-    } catch (err) {
-      console.error('Download failed', err);
-    }
-  }, [snippet.content, snippet.title]);
 
   return (
     <div
@@ -71,21 +53,6 @@ export default function SnippetCard({ snippet }: Props) {
             {categoryIcons[snippet.category]}
             {catInfo.label}
           </span>
-        </div>
-
-        <div className="flex items-center gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity ml-2">
-          <button
-            onClick={handleDownload}
-            className={cn(
-              'p-1.5 rounded-lg transition-all duration-150',
-              downloaded
-                ? 'text-emerald-400 bg-emerald-500/10'
-                : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'
-            )}
-            title="Download PDF"
-          >
-            {downloaded ? <Check size={14} /> : <Download size={14} />}
-          </button>
         </div>
       </div>
 
